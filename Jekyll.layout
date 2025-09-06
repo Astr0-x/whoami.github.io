@@ -1,0 +1,4 @@
+layout: default<!DOCTYPE html><html lang="en" class="bg-black text-green-400 font-mono"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{{ page.title }}</title><script src="https://www.google.com/search?q=https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css"></head><body class="flex items-center justify-center p-4">{{ content }}
+
+<script src="{{ site.baseurl }}/assets/js/main.js"></script>
+</body></html>
