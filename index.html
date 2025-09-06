@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black text-green-400 font-mono">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="terminal-container max-w-4xl mx-auto w-full rounded-lg">
+        <div id="output" class="terminal-output p-4 overflow-y-auto"></div>
+        <div class="prompt-line flex items-center p-4">
+            <span class="user-prompt">[root@REICH ~]</span><span class="text-green-400">$</span>
+            <input type="text" id="input" class="input-line ml-2 flex-grow text-white-300 bg-transparent caret-green-400 focus:outline-none" autofocus>
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const input = document.getElementById('input');
+
+        const content = {
+            'help': `
+Welcome to my interactive portfolio. Here are the commands you can use:
+
+- <span class="clickable-link" onclick="executeCommand('whoami')">whoami</span>: Learn about me and my background.
+- <span class="clickable-link" onclick="executeCommand('certs')">certs</span>: List my professional certifications.
+- <span class="clickable-link" onclick="executeCommand('writeups')">writeups</span>: View my recent write-ups and analyses.
+- <span class="clickable-link" onclick="executeCommand('projects')">projects</span>: Check out my key cybersecurity projects.
+- <span class="clickable-link" onclick="executeCommand('contact')">contact</span>: Get in touch with me.
+- <span class="clickable-link" onclick="executeCommand('sudo')">sudo</span>: A very powerful command. Use with caution.
+- <span class="clickable-link" onclick="executeCommand('clear')">clear</span>: Clears the terminal screen.
+            `,
+            'whoami': `
+<p>Greetings. My name is Shawn Reich. I am a passionate cybersecurity professional with a focus on penetration testing, network security, and digital forensics. My journey in cybersecurity began with a fascination for how systems work, and a drive to secure them against malicious actors. I am dedicated to continuous learning and applying my skills to solve complex security challenges.</p>
+            `,
+            'certs': `
+<p>
+    - <span class="text-yellow-400">CompTIA Security+</span>
+    - <span class="text-yellow-400">Certified Ethical Hacker (CEH)</span>
+    - <span class="text-yellow-400">Offensive Security Certified Professional (OSCP)</span>
+</p>
+            `,
+            'writeups': `
+<p>This section lists my most recent write-ups. The full write-ups are available on my GitHub.</p>
+<p>
+    1. <span class="text-cyan-400">Vulnerability Analysis of CVE-2023-XXXX</span>: A detailed write-up on a buffer overflow vulnerability.
+    2. <span class="text-cyan-400">Pwning the Machine: 'Ripped' on HackTheBox</span>: A step-by-step guide to exploiting the 'Ripped' machine.
+    3. <span class="text-cyan-400">Securing a Web Application with WAF</span>: An analysis of Web Application Firewalls and their implementation.
+</p>
+            `,
+            'projects': `
+<p>This section displays my key projects. Full code and details are on my GitHub.</p>
+<p>
+    1. <span class="text-yellow-400">Intrusion Detection System (IDS)</span>: A Python-based IDS that monitors network traffic for malicious activity.
+    2. <span class="text-yellow-400">Automated Phishing Campaign Tool</span>: A tool built with Go to simulate phishing attacks for awareness training.
+    3. <span class="text-yellow-400">Cyber Range Environment Setup</span>: Documentation and scripts for setting up a simulated network for red and blue team exercises.
+</p>
+            `,
+            'contact': `
+<p>Feel free to connect with me!</p>
+<p>
+    - Email: <a href="mailto:your.email@example.com" target="_blank" class="text-cyan-400">your.email@example.com</a>
+    - LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank" class="text-cyan-400">linkedin.com/in/yourprofile</a>
+    - GitHub: <a href="https://github.com/yourusername" target="_blank" class="text-cyan-400">github.com/yourusername</a>
+</p>
+            `,
+            'sudo': `
+<p>
+<span class="text-yellow-400">[sudo] password for root:</span><br>
+<span class="text-red-400">Sorry, try again.</span><br>
+<span class="text-red-400">[sudo] password for root:</span><br>
+<span class="text-red-400">sudo: a hard lesson is a good lesson.</span>
+</p>
+            `
+        };
+
+        const welcomeMessage = `
+Welcome to my interactive portfolio!
+
+Type <span class="text-cyan-400">help</span> to get a list of available commands.
+`;
+        
+        // This async function types out the text line by line
+        async function typeText(element, text, delay = 20) {
+            const lines = text.split('\n');
+            for (const line of lines) {
+                const lineDiv = document.createElement('div');
+                lineDiv.innerHTML = line;
+                element.appendChild(lineDiv);
+                element.scrollTop = element.scrollHeight;
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+
+        // Function to process and display commands
+        async function executeCommand(command) {
+            const trimmedCommand = command.trim().toLowerCase();
+            if (!trimmedCommand) return;
+
+            // Display the user's typed command
+            const commandLine = document.createElement('div');
+            commandLine.innerHTML = `<span class="user-prompt">[root@REICH ~]</span><span class="text-green-400">$</span> ${trimmedCommand}`;
+            output.appendChild(commandLine);
+
+            const outputDiv = document.createElement('div');
+            output.appendChild(outputDiv);
+
+            switch (trimmedCommand) {
+                case 'clear':
+                    output.innerHTML = '';
+                    await typeText(outputDiv, welcomeMessage);
+                    break;
+                case 'whoami':
+                    await typeText(outputDiv, content['whoami']);
+                    break;
+                case 'certs':
+                    await typeText(outputDiv, content['certs']);
+                    break;
+                case 'writeups':
+                    await typeText(outputDiv, content['writeups']);
+                    break;
+                case 'projects':
+                    await typeText(outputDiv, content['projects']);
+                    break;
+                case 'contact':
+                    await typeText(outputDiv, content['contact']);
+                    break;
+                case 'sudo':
+                    await typeText(outputDiv, content['sudo']);
+                    break;
+                case 'help':
+                    await typeText(outputDiv, content['help']);
+                    break;
+                default:
+                    await typeText(outputDiv, `bash: ${trimmedCommand}: command not found`);
+                    break;
+            }
+
+            input.value = '';
+            input.focus();
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Add event listener for the Enter key on the input field
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                executeCommand(input.value);
+            }
+        });
+
+        // Initial setup on page load
+        window.onload = async function() {
+            const welcomeDiv = document.createElement('div');
+            output.appendChild(welcomeDiv);
+            await typeText(welcomeDiv, welcomeMessage);
+            input.focus();
+        };
+
+        window.addEventListener('resize', function() {
+            output.scrollTop = output.scrollHeight;
+        });
+
+    </script>
+</body>
+</html>
